@@ -1,14 +1,17 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using Microsoft.Ajax.Utilities
+@using Microsoft.AspNet.Identity
 @model SpotzWeb.Models.SpotzDetailViewModel
 
 @{
     ViewBag.Title = "Details";
 }
+<span id="editTitle" class="glyphicon glyphicon-pencil glyph-button"></span>
+<h1>@Model.Spotz.Title</h1>
 
-    
-
-
-<h2>@Model.Spotz.Title</h2>
+<div id="updateDescriptionWrapper" class="hidden">
+    <input type="text" class="form-control"/>
+    <button id="updateTitleBtn" class="btn btn-primary">Update Title</button>
+</div>
 
 <div class="row">
     <div class="col-md-4">
@@ -30,45 +33,63 @@
     </div>
     
     <div class="col-md-8">
-        <div class="col-md-12">KART</div>
+        <div class="col-md-12">
+            <div class="map-wrapper">
+                <iframe width="100%" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBwm7_-2a-YLlsDwT3l6OQn8rkuxUd0xEo&center=@Model.Spotz.Latitude,@Model.Spotz.Longitude&zoom=15"></iframe>
+            </div>
+        </div>
         <div class="col-md-8">TAGS</div>
         <div class="col-md-4">
             <h3>@Model.Spotz.User.UserName</h3>
             <img src="@Model.Spotz.User.GravatarUrl" class="img-responsive" alt="@Model.Spotz.User.UserName" />
         </div>
     </div>
-    <div class="col-md-12 image-row">
-        @foreach (var image in Model.Spotz.Images)
-        {
-            <a data-fancybox="gallery" href="@image.ImageUrl"><img src="@image.ImageUrl/?thumb=100"></a>
-        }
+    <div class="col-md-12">
+        <div class="image-row">
+            @foreach (var image in Model.Spotz.Images)
+            {
+                <a data-fancybox="gallery" href="@image.ImageUrl"><img src="@image.ImageUrl/?thumb=80"></a>
+            }
+        </div>
     </div>
 
 </div>
 <div class="row">
-    <div class="col-md-12">
-        @Model.Spotz.Description
+    <div class="col-md-12 spotz-description">
+        @if (@Model.Spotz.User.UserName == User.Identity.Name)
+        {
+            // TO DO: flytt edit-knapp hit
+        }
+        <span id="editDescription" class="glyphicon glyphicon-pencil glyph-button"></span>
+        <p>@Model.Spotz.Description</p>
+        <div id="editDescriptionText" class="hidden">
+            <textarea class="text-area form-control" type="text"></textarea>
+            <button id="updateDescriptionBtn" class="btn bg-primary">Update text</button>
+        </div>
     </div>
 
 </div>
-<h3>Comments:</h3>
-<button id="addCommentBtn" class="btn btn-default">Add Comment</button>
-<div id="addComment" class="">
+<h3 class="bottom-air-1">Comments:</h3>
+<button id="addCommentBtn" class="btn btn-info bottom-air-1">Add Comment</button>
+<div id="addComment" >
     <textarea class="text-area form-control" id="addCommentText" type="text"></textarea>
 
 </div>
 <div id="new-comment-wrapper"></div>
 <div id="comment-wrapper">
-    @foreach (var item in @Model.Spotz.Comments)
+    @foreach (var item in Model.Spotz.Comments)
     {
         <div class="row comment-section">
 
             <div class="col-md-2">
-                <h3>@item.User.UserName</h3>
-                <img src="@item.User.GravatarUrl" class="img-responsive" alt="@item.User.UserName" />
+                @if (item.User != null)
+                {
+                    <h4>@item.User.UserName</h4>
+                }                
+                <img src="@item.User.GravatarUrl" class="img-responsive" alt="@item.User.UserName avatar"/>
             </div>
-            <div class="col-md-10">
-                @item.Text
+            <div class="col-md-9 col-md-push-1">
+                <p>@item.Text</p>
             </div>
 
         </div>
@@ -87,7 +108,34 @@
 <script src="/Scripts/dropzone/dropzone.min.js" type="text/javascript"></script>
 <script src="/Scripts/fancybox3/jquery.fancybox.min.js" type="text/javascript"></script>
     <Script>
-        
+
+        var addCommentButton = $('#addCommentBtn');
+        var currentUser = '@User.Identity.GetUserId()';
+        var spotzId = '@Model.Spotz.SpotzId';
+        var commentField = document.getElementById('addCommentText');
+        var spotzDescrText = $('.spotz-description p');
+        var spotzTextfieldWrapper = $('#editDescriptionText');
+        var spotzTextfield = $('#editDescriptionText textarea');
+        var updateTitleBtn = $('#updateTitleBtn');
+        var updateDescriptionWrapper = $('#updateDescriptionWrapper');
+
+        spotzTextfield.val(spotzDescrText.text());
+        //var url = '/Home/AddComment/' + spotzId;
+
+        $('#editDescription').click(function() {
+            spotzDescrText.toggleClass('hidden');
+            spotzTextfieldWrapper.toggleClass('hidden');
+        });
+
+        $('#updateDescriptionBtn').click(function() {
+            updateDescriptionText();
+        });
+
+        $('#editTitle').click(function () {
+            updateDescriptionWrapper.toggleClass('hidden');
+            $('h1').toggleClass('hidden');
+        });
+
         //File Upload response from the server
         Dropzone.options.dropzoneForm = {
             autoProcessQueue: false,
@@ -109,24 +157,24 @@
                     myDropZone.processQueue();
                 }
 
-                this.on("complete", function (data) {
-                    if (data.response !== "error") {
-                        $('#spotz-image').attr(src, data.imgurl);
-                    }
-                    //var res = eval('(' + data.xhr.responseText + ')');
-                    var res = JSON.parse(data.xhr.responseText);
-                });
+                this.on("success",
+                    function (file, data) {
+                        console.log(data.imgurl);
+
+                        //$("#spotz-image").attr("src", data.imgurl);
+                        document.getElementById('spotz-image').src = data.imgurl;
+
+                        //var res = eval('(' + data.xhr.responseText + ')');
+                        //var res = JSON.parse(data.xhr.responseText);
+                    });
             }
         };
 
-        var addCommentButton = $('#addCommentBtn');
-        var currentUser = '@User.Identity.GetUserId()';
-        var spotzId = '@Model.Spotz.SpotzId';
-        var commentField = document.getElementById('addCommentText');
-        var url = '/Home/AddComment/' + spotzId;
 
         addCommentButton.click(function () {
-
+            if (commentField.value === null || commentField.value === '') {
+                return;
+            }
             $.post('/api/SpotzApi/AddComment/',
                 {
                     Id: spotzId,
@@ -134,26 +182,43 @@
                     Comment: commentField.value
                 })
                 .done(function (data) {
-                    console.log('Succcess!');
-                    commentField.value = 'Takk for kommentaren!';
-                    $('#new-comment-wrapper').html(
-                        '<div class=\'row comment-section\'>' +
-                        '<div class="col-md-2">' +
-                        data.user +
-                        "<img src='" +
-                        data.gravatarurl +
-                        "' class='img-responsive' />" +
-                        "</div><div class='col-md-10'>" +
-                        data.comment +
-                        "</div></div>");
+                    if (data.status === "success") {
+                        console.log('Success!');
+                        commentField.value = 'Takk for kommentaren!';
+                        $('#new-comment-wrapper').html(
+                            '<div class=\'row comment-section\'>' +
+                            '<div class="col-md-2">' +
+                            data.user +
+                            "<img src='" +
+                            data.gravatarurl +
+                            "' class='img-responsive' />" +
+                            "</div><div class='col-md-10'>" +
+                            data.comment +
+                            "</div></div>");
+                    }
+                    
 
                 }).fail(function (err) {
                     console.error(err);
                 });
-
-
-
         });
+
+        function updateDescriptionText() {
+            $.post('/api/UpdateDescriptionText/',
+            {
+                Id: spotzId,               
+                Text: spotzTextfield.val()
+             })
+                .done(function (data) {
+                    console.log(data.status);
+                    spotzTextfieldWrapper.toggleClass('hidden');
+                    spotzDescrText.toggleClass('hidden');
+                    spotzDescrText.text(data.text);
+
+                }).fail(function (err) {
+                    console.error(err);
+                });
+        }
 
 
     </Script>

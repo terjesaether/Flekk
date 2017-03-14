@@ -135,7 +135,7 @@ namespace SpotzWeb.Migrations
                 s => s.Title,
                 new Models.Spotz { SpotzId = Guid.NewGuid(), Title = "Vigelandsparken", Description = "Nice place with lots of naked people", Timestamp = DateTime.Now, User = user1, Tags = listOfTags, Comments = listOfComments },
                 new Models.Spotz { SpotzId = Guid.NewGuid(), Title = "Holmenkollen", Description = "Nice place with lots of ski people", Timestamp = DateTime.Now, User = user2, Tags = listOfTags },
-                new Models.Spotz { Title = "Barcode", Description = "Nice place with lots of tall houses", Timestamp = DateTime.Now, User = adminUser, Tags = listOfTags }
+                new Models.Spotz { SpotzId = Guid.NewGuid(), Title = "Barcode", Description = "Nice place with lots of tall houses", Timestamp = DateTime.Now, User = adminUser, Tags = listOfTags }
                 );
 
         }

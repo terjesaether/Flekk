@@ -15,4 +15,10 @@ namespace SpotzWeb.Models
         public string UserId { get; set; }
         public string Comment { get; set; }
     }
+
+    public class UpdateDescriptionText
+    {
+        public string Id { get; set; }
+        public string Text { get; set; }
+    }
 }

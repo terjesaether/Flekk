@@ -146,7 +146,6 @@ namespace SpotzWeb.Controllers
                     Filename = title,
                     ImageId = imageId,
                     ImageUrl = Url.Route("Images", new { id = imageId }),
-                    //ImageUrl = "/Images/" + imageId,
                     Spotz = spotz
                 };
 
@@ -155,7 +154,7 @@ namespace SpotzWeb.Controllers
 
                 db.Images.Add(newImage);
                 db.SaveChanges();
-                return Json(new { status = "success", imgurl = newImage.ImageUrl });
+                return Json(new { status = "complete", imgurl = newImage.ImageUrl });
                 //return Ok();
             }
             catch (Exception e)
@@ -188,6 +187,7 @@ namespace SpotzWeb.Controllers
             if (addedComment.Comment == null)
             {
                 return Json(new { status = "error", message = "No commment added!" });
+                //return await HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
 
             var idGuid = Guid.Parse(addedComment.Id);
@@ -215,6 +215,38 @@ namespace SpotzWeb.Controllers
 
             return Json(new { status = "success", message = "Comment created!", comment = addedComment.Comment, user = newComment.User.UserName, gravatarurl = newComment.User.GravatarUrl });
             //return Json(newComment);
+        }
+
+        [System.Web.Http.Route("api/UpdateDescriptionText/")]
+        [System.Web.Http.HttpPost]
+        public async Task<IHttpActionResult> UpdateDescriptionText(UpdateDescriptionText updateDescriptionText)
+        {
+
+            if (updateDescriptionText.Text == "")
+            {
+                return Json(new { status = "error", message = "No text updated!" });
+            }
+
+            var idGuid = Guid.Parse(updateDescriptionText.Id);
+
+            var spotz = await db.Spotzes.FindAsync(idGuid);
+
+            if (spotz != null)
+            {
+                spotz.Description = updateDescriptionText.Text;
+                try
+                {
+                    db.Entry(spotz).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    return Json(new { status = "error", message = "Error updating description!" });
+                }
+            }
+
+            return Json(new { status = "success", message = "Description updated!", text = updateDescriptionText.Text });
+
         }
 
         protected override void Dispose(bool disposing)
