@@ -23,9 +23,14 @@ namespace SpotzWeb
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/dropzonejs").Include(
+                      "~/Scripts/dropzone/dropzone.min.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
+                      //"~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+
         }
     }
 }

@@ -1,0 +1,68 @@
+﻿$redColor: #e63946;
+$greenBlue: #a8dadc;
+$darkBlue: #1d3557;
+$midBlue: #457b9d;
+$lightBlue: #f1faee;
+
+@import 'bootstrap-sass-master/bootstrap-sass/assets/stylesheets/bootstrap';
+
+body {
+    //padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.navbar-header img {
+    padding: 8px;
+}
+.navbar-header  {
+    width: 100%;
+}
+.navbar-nav {
+    text-transform: uppercase;
+}
+.navbar-nav li {
+    margin-top: 5px;
+}
+
+.comment-section {
+    padding: 20px;
+    background: #0094ff;
+    color: #fff;
+    border-bottom: dashed 1px #808080;
+}
+/*.comment-section:nth-child(even) {
+    
+    background: #ff6a00;    
+}*/
+.text-area {
+    max-width: 100%;
+    min-height: 150px;
+}
+#dropzoneForm {
+    background: $greenBlue;
+}
+.image-row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background: $lightBlue;
+}

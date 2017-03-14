@@ -1,0 +1,75 @@
+﻿@model IEnumerable<SpotzWeb.Models.SpotzDetailViewModel>
+
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-8 col-md-push-2">
+        <h1>
+            <img class="img-responsive center-block" src="/Images/Spotz-logo_big.png" />
+        </h1>
+    </div>
+</div>
+
+@foreach (var item in Model)
+{
+    <div class="row">
+        <div class="col-md-2"><img class="img-responsive" src="" /></div>
+        <div class="col-md-8">
+            <h1>@item.Spotz.Title</h1>
+            <p>@item.Spotz.Description</p>
+        </div>
+        <div class="col-md-2">@item.Spotz.User.UserName</div>
+
+    </div>
+}
+
+<div class="row">
+    <button onclick="getLocation()">Get Location</button>
+
+    <div id="demo"></div>
+</div>
+
+@section scripts {
+    <script>
+var x = document.getElementById("demo");
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+function showPosition(position) {
+    x.innerHTML = "Latitude: " + position.coords.latitude +
+    "<br>Longitude: " + position.coords.longitude;
+
+    var latlon = position.coords.latitude + "," + position.coords.longitude;
+
+    var img_url = "https://maps.googleapis.com/maps/api/staticmap?center="+latlon+"&zoom=14&size=400x300&sensor=false&key=YOUR_:KEY";
+
+    document.getElementById("mapholder").innerHTML = "<img src='"+img_url+"'>";
+}
+
+function showError(error) {
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+            x.innerHTML = "User denied the request for Geolocation."
+            break;
+        case error.POSITION_UNAVAILABLE:
+            x.innerHTML = "Location information is unavailable."
+            break;
+        case error.TIMEOUT:
+            x.innerHTML = "The request to get user location timed out."
+            break;
+        case error.UNKNOWN_ERROR:
+            x.innerHTML = "An unknown error occurred."
+            break;
+    }
+}
+    </script>
+}
+
+

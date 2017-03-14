@@ -178,27 +178,82 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImagesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SpotzApiController.cs" />
+    <Compile Include="Controllers\SpotzController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703141005338_InitialCreate.cs" />
+    <Compile Include="Migrations\201703141005338_InitialCreate.Designer.cs">
+      <DependentUpon>201703141005338_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703141013250_AddedDbSets.cs" />
+    <Compile Include="Migrations\201703141013250_AddedDbSets.Designer.cs">
+      <DependentUpon>201703141013250_AddedDbSets.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703141030353_AddedGravatarField.cs" />
+    <Compile Include="Migrations\201703141030353_AddedGravatarField.Designer.cs">
+      <DependentUpon>201703141030353_AddedGravatarField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703141736078_AddedImagesDbSet.cs" />
+    <Compile Include="Migrations\201703141736078_AddedImagesDbSet.Designer.cs">
+      <DependentUpon>201703141736078_AddedImagesDbSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703141741209_FixedImages.cs" />
+    <Compile Include="Migrations\201703141741209_FixedImages.Designer.cs">
+      <DependentUpon>201703141741209_FixedImages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\DataTransferObjects.cs" />
+    <Compile Include="Models\HelperMethods.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\JoinClasses.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Spotz.cs" />
+    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\ViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Site.min.css">
+      <DependentUpon>Site.css</DependentUpon>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Spotz-logo_big.png" />
+    <Content Include="Images\Spotz-logo_mid.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\Site.scss" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\dropzone\basic.css" />
+    <Content Include="Scripts\dropzone\basic.min.css" />
+    <Content Include="Scripts\dropzone\dropzone-amd-module.js" />
+    <Content Include="Scripts\dropzone\dropzone-amd-module.min.js" />
+    <Content Include="Scripts\dropzone\dropzone.css" />
+    <Content Include="Scripts\dropzone\dropzone.js" />
+    <Content Include="Scripts\dropzone\dropzone.min.css" />
+    <Content Include="Scripts\dropzone\dropzone.min.js" />
+    <Content Include="Scripts\fancybox3\jquery.fancybox.css" />
+    <Content Include="Scripts\fancybox3\jquery.fancybox.js" />
+    <Content Include="Scripts\fancybox3\jquery.fancybox.min.css" />
+    <Content Include="Scripts\fancybox3\jquery.fancybox.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -220,7 +275,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -244,9 +298,18 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Spotz\Create.cshtml" />
+    <Content Include="Views\Spotz\Delete.cshtml" />
+    <Content Include="Views\Spotz\Details.cshtml" />
+    <Content Include="Views\Spotz\Edit.cshtml" />
+    <Content Include="Views\Spotz\Index.cshtml" />
+    <Content Include="Views\Home\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\bootstrap-sass-master\" />
+    <Folder Include="Views\Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -255,6 +318,23 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201703141005338_InitialCreate.resx">
+      <DependentUpon>201703141005338_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141013250_AddedDbSets.resx">
+      <DependentUpon>201703141013250_AddedDbSets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141030353_AddedGravatarField.resx">
+      <DependentUpon>201703141030353_AddedGravatarField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141736078_AddedImagesDbSet.resx">
+      <DependentUpon>201703141736078_AddedImagesDbSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141741209_FixedImages.resx">
+      <DependentUpon>201703141741209_FixedImages.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
